@@ -35,14 +35,17 @@ class GdpChartApi(APIView):
             year_x = []
             inr_y = []
             usd_y = []
-            rate = 82.02
+            rate = requests.get(
+                'https://api.currencyfreaks.com/v2.0/rates/latest?apikey=accb15ec4147450f9dce007d3e8b9d15').json()[
+                'rates']['INR']
+            #rate = 82.02
             gdp_data = Gdp.objects.all()
             serializer = GdpSerializer(gdp_data, many=True)
             for i in serializer.data:
                 # print(dict(i)['gdp_usd_billion'], dict(i)['year'])
                 year_x.append(dict(i)['year'])
                 usd_y.append(dict(i)['gdp_usd_billion'])
-                inr_y.append(dict(i)['gdp_usd_billion'] * rate)
+                inr_y.append(dict(i)['gdp_usd_billion'] * float(rate))
             print(len(inr_y))
             print(len(usd_y))
 
